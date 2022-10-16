@@ -91,40 +91,43 @@ max = input("Enter maximuim reward percentage (If there is only one, simply writ
 max_reward_input = max
 max_reward = f'{float(max) / 100:.1%}'
 
-time_period = input("Enter time period: either Y M W: ")
+time_period = print("Enter time period you would like to compound"), input("Enter either Y M W: ")
 
-def time_period_conversion(time_period):
+def convert_time_period(time_period): #t in the equation
     time = 0
-    if time_period == 'Y' or 'y':
-        time = 365
-        print("365 Days")
-    elif time_period == 'M' or 'm':
-        time = 30 #find for different months
+    if time_period.upper() == 'Y':
+        years = input("Enter amount of years: ")
+        time = 365 * years
+    elif time_period.upper() == 'M':
+        months = input("Enter amount of months: ")
+        time = 30 * months #find for different months
         print("30 Days")
-    elif time_period == 'W' or 'w':
-        time = 7
-        print("7 Days")
+    elif time_period == 'W':
+        weeks = input("Enter amount of weeks: ")
+        time = 7 * weeks
     else:
         print("Not a valid time period.")
     return time
 
-num_times_interest_compounded = print("Enter number of times interest is compounded: "), input("Daily 'D' Weekly 'W' Monthly 'M' Yearly 'Y': ") #Daily Weekly Monthly Yearly
+time_conversion = convert_time_period(time_period)
 
-def num_of_compound(num_times_interest_compounded): #create flexibility in amount of time to compound (e.g. 2 times a week)
+num_times_interest_compounded_n = print("Enter number of times interest is compounded: "), input("Daily 'D' Weekly 'W' Monthly 'M' Yearly 'Y' or any number: ") #Daily Weekly Monthly Yearly
+
+def find_num_of_compound(num_times_interest_compounded): #create flexibility in amount of time to compound (e.g. 2 times a week)
     if num_times_interest_compounded.isnumeric():
         return float(num_times_interest_compounded)
 
-    if num_times_interest_compounded.upper() == 'D' or 'DAILY':
-        return 365 * time_period_conversion
-    elif num_times_interest_compounded.upper() == 'W' or 'WEEKLY':
-        return 52 * time_period_conversion
-    elif num_times_interest_compounded.upper() == 'M' or 'Monthly':
-        return 12 * time_period_conversion
-    elif num_times_interest_compounded.upper() == 'Y' or 'Yearly':
-        return 1 * time_period_conversion
-#t = time period = year? month? week? day? hour?
+    char = num_times_interest_compounded.upper()
+    if char == 'D' or 'DAILY':
+        return 365 * convert_time_period()
+    elif char == 'W' or 'WEEKLY':
+        return 52 * convert_time_period()
+    elif char == 'M' or 'Monthly':
+        return 12 * convert_time_period()
+    elif char == 'Y' or 'Yearly':
+        return 1 * convert_time_period()
 
-
+num_of_compound = find_num_of_compound(num_times_interest_compounded_n)
 #def num_investments (n):
 
 
@@ -136,11 +139,11 @@ def num_of_compound(num_times_interest_compounded): #create flexibility in amoun
 
 min_reward_input = int(min_reward_input)
 max_reward_input = int(max_reward_input)
-min_returns_per_week = (staking * min_reward_input/52) #p = the principal investment amount (the initial deposit or loan amount) /12 months /4 weeks
-max_returns_per_week = (staking * max_reward_input/52)
+min_returns_per_week = (staking * min_reward_input/num_of_compound) #p = the principal investment amount (the initial deposit or loan amount) /12 months /4 weeks
+max_returns_per_week = (staking * max_reward_input/num_of_compound)
 
-min_compound_interest = min_returns_per_week*(1 + (min_reward_input/52))**(52*1) #1 = 1 year need to figure out the time calculation// (n*t) n = amount of times done // t = time period
-max_compound_interest = max_returns_per_week*(1 + (max_reward_input/52))**(52*1)
+min_compound_interest = min_returns_per_week*(1 + (min_reward_input/num_of_compound))**(num_of_compound*time_conversion) #1 = 1 year need to figure out the time calculation// (n*t) n = amount of times done // t = time period
+max_compound_interest = max_returns_per_week*(1 + (max_reward_input/num_of_compound))**(num_of_compound*time_conversion)
 
 min_compound_interest_USD = price * min_compound_interest
 max_compound_interest_USD = price * max_compound_interest
