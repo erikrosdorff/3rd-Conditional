@@ -108,8 +108,20 @@ def time_period_conversion(time_period):
         print("Not a valid time period.")
     return time
 
-num_times_interest_compounded = str(input("Enter number of times interest is compounded: ")) #Daily Weekly Monthly Yearly
+num_times_interest_compounded = print("Enter number of times interest is compounded: "), input("Daily 'D' Weekly 'W' Monthly 'M' Yearly 'Y': ") #Daily Weekly Monthly Yearly
 
+def num_of_compound(num_times_interest_compounded): #create flexibility in amount of time to compound (e.g. 2 times a week)
+    if num_times_interest_compounded.isnumeric():
+        return float(num_times_interest_compounded)
+
+    if num_times_interest_compounded.upper() == 'D' or 'DAILY':
+        return 365 * time_period_conversion
+    elif num_times_interest_compounded.upper() == 'W' or 'WEEKLY':
+        return 52 * time_period_conversion
+    elif num_times_interest_compounded.upper() == 'M' or 'Monthly':
+        return 12 * time_period_conversion
+    elif num_times_interest_compounded.upper() == 'Y' or 'Yearly':
+        return 1 * time_period_conversion
 #t = time period = year? month? week? day? hour?
 
 
