@@ -1,4 +1,4 @@
-#lets make a calucator that shows our ROI in crypto staking
+# lets make a calucator that shows our ROI in crypto staking
 '''
 V1
 Insert coins manually
@@ -10,6 +10,17 @@ See history of "would have been" investments
 
 v3
 Connect through API (VPN?)
+
+Money balance equation
+robertson's cash-balance equation
+p = m/kt
+
+quantity theory of money formula
+m*v = p*t
+m = money supply
+v = velocity of money
+p = general price of goods
+t = all transactions
 
 Looks at your current shares:
 1) Shows how much you have in Currency and USD (or any other variant of your choosing)
@@ -53,111 +64,133 @@ See price history
 
 '''
 
-#a = p*(1 + (r/n))**(n,t) 
-#A = the future value of the investment/loan, including interest
-#P = the principal investment amount (the initial deposit or loan amount)
-#r = the annual interest rate (decimal)
-#n = the number of times that interest is compounded per unit t
-#t = the time the money is invested or borrowed for
-#[staked_interest = returns_per_week(1 + (interest_rate/number_of_times_per_week))**(number_of_times_per_week/t) )]
-#If an amount of $5,000 is deposited into a savings account at an annual interest rate of 5%, 
-#compounded monthly, the value of the investment after 10 years can be calculated as follows...
+#a = p*(1 + (r/n))**(n,t)
+# A = the future value of the investment/loan, including interest
+# P = the principal investment amount (the initial deposit or loan amount)
+# r = the annual interest rate (decimal)
+# n = the number of times that interest is compounded per unit t
+# t = the time the money is invested or borrowed for
+# [staked_interest = returns_per_week(1 + (interest_rate/number_of_times_per_week))**(number_of_times_per_week/t) )]
+# If an amount of $5,000 is deposited into a savings account at an annual interest rate of 5%,
+# compounded monthly, the value of the investment after 10 years can be calculated as follows...
 #P = 5000.
-#r = 5/100 = 0.05 (decimal).
+# r = 5/100 = 0.05 (decimal).
 #n = 12.
 #t = 10.
-#If we plug those figures into the formula, we get the following:
-#A = 5000 (1 + 0.05 / 12) (12 * 10) = 8235.05.
-#So, the investment balance after 10 years is $8,235.05.
+# If we plug those figures into the formula, we get the following:
+# A = 5000 (1 + 0.05 / 12) (12 * 10) = 8235.05.
+# So, the investment balance after 10 years is $8,235.05.
 
 import math
 import time
 
-#This section only takes in the coin's value
+# This section only takes in the coin's value
 coin = input("Enter name of the coin: ")
 symbol = input("Enter coin Symbol: ")
 price_input = float(input("Enter current price of coin USD: "))
 price = float(price_input)
 staking = float(input("Enter how many coins are being staked: "))
-min_reward_input = input("Enter minimuim reward percentage, e.g. 12: ")
-min_reward = f'{float(min_reward_input) / 100:.1%}' #fstring converts to percentage
+min_reward_input = float(input("Enter minimuim reward percentage, e.g. 12: "))
+# fstring converts to percentage
+min_reward = float(f'{min_reward_input / 100}')
+
 
 def max_reward_fun(max):
     if max == 'None' or 'none' or 0:
-        return None 
+        return None
     else:
         return max
-max = input("Enter maximuim reward percentage (If there is only one, simply write 'none'): ")
-max_reward_input = max
-max_reward = f'{float(max) / 100:.1%}'
 
-time_period = print("Enter time period you would like to compound"), input("Enter either Y M W: ")
 
-def convert_time_period(time_period): #t in the equation
-    time = 0
+max = float(input(
+    "Enter maximuim reward percentage (If there is only one, simply write 'none'): "))
+max_reward = float(f'{max / 100}')
+
+print("Enter time period you would like to compound")
+time_period = input("Enter either Y M W: ")
+
+
+def convert_time_period(time_period):  # t in the equation
+    #time_amount = 0
     if time_period.upper() == 'Y':
-        years = input("Enter amount of years: ")
-        time = 365 * years
+        years = int(input("Enter amount of years: "))
+        time_period = 365 * years
+        print(type(years))
     elif time_period.upper() == 'M':
-        months = input("Enter amount of months: ")
-        time = 30 * months #find for different months
+        months = int(input("Enter amount of months: "))
+        time_period = 30 * months  # find for different months
         print("30 Days")
-    elif time_period == 'W':
-        weeks = input("Enter amount of weeks: ")
-        time = 7 * weeks
+    elif time_period.upper() == 'W':
+        weeks = int(input("Enter amount of weeks: "))
+        time_period = 7 * weeks
     else:
         print("Not a valid time period.")
-    return time
+        quit()
+    return time_period
 
-time_conversion = convert_time_period(time_period)
 
-num_times_interest_compounded_n = print("Enter number of times interest is compounded: "), input("Daily 'D' Weekly 'W' Monthly 'M' Yearly 'Y' or any number: ") #Daily Weekly Monthly Yearly
+time_conversion = int(convert_time_period(time_period))
 
-def find_num_of_compound(num_times_interest_compounded): #create flexibility in amount of time to compound (e.g. 2 times a week)
-    if num_times_interest_compounded.isnumeric():
-        return float(num_times_interest_compounded)
+print("Enter number of times interest is compounded: ")
+num_times_interest_compounded_n = input(
+    "Daily 'D' Weekly 'W' Monthly 'M' Yearly 'Y' or any number: ")  # Daily Weekly Monthly Yearly
 
-    char = num_times_interest_compounded.upper()
+
+# create flexibility in amount of time to compound (e.g. 2 times a week)
+def find_num_of_compound(num_times_interest_compounded_n):
+    if num_times_interest_compounded_n.isnumeric():
+        return float(num_times_interest_compounded_n)
+
+    char = num_times_interest_compounded_n.upper()
     if char == 'D' or 'DAILY':
-        return 365 * convert_time_period()
+        return 365 * time_conversion
     elif char == 'W' or 'WEEKLY':
-        return 52 * convert_time_period()
+        return 52 * time_conversion
     elif char == 'M' or 'Monthly':
-        return 12 * convert_time_period()
+        return 12 * time_conversion
     elif char == 'Y' or 'Yearly':
-        return 1 * convert_time_period()
+        return 1 * time_conversion
+
 
 num_of_compound = find_num_of_compound(num_times_interest_compounded_n)
-#def num_investments (n):
+# def num_investments (n):
 
 
-#def amount_time(time):
-#n = amount of times in a certain period you invest (t)
-#t = time period (Year, day, month, etc.)
+# def amount_time(time):
+# n = amount of times in a certain period you invest (t)
+# t = time period (Year, day, month, etc.)
 
-#a = p*(1 + (r/n))**(n*t) 
+#a = p*(1 + (r/n))**(n*t)
+#round_compound = round(num_of_compound, 10)
+# print(round_compound)
+#round_compound = float(round_compound)
+# min_returns_per_week = (staking * (round_compound/min_reward)) #p = the principal investment amount (the initial deposit or loan amount) /12 months /4 weeks
+# max_returns_per_week = (staking * (round_compound/max_reward))
+# p = the principal investment amount (the initial deposit or loan amount) /12 months /4 weeks
+min_returns_per_week = (staking * min_reward/num_of_compound)
+max_returns_per_week = (staking * max_reward/num_of_compound)
 
-min_reward_input = int(min_reward_input)
-max_reward_input = int(max_reward_input)
-min_returns_per_week = (staking * min_reward_input/num_of_compound) #p = the principal investment amount (the initial deposit or loan amount) /12 months /4 weeks
-max_returns_per_week = (staking * max_reward_input/num_of_compound)
-
-min_compound_interest = min_returns_per_week*(1 + (min_reward_input/num_of_compound))**(num_of_compound*time_conversion) #1 = 1 year need to figure out the time calculation// (n*t) n = amount of times done // t = time period
-max_compound_interest = max_returns_per_week*(1 + (max_reward_input/num_of_compound))**(num_of_compound*time_conversion)
+# 1 = 1 year need to figure out the time calculation// (n*t) n = amount of times done // t = time period
+min_compound_interest = min_returns_per_week * \
+    (1 + (min_reward/num_of_compound))**(num_of_compound*time_conversion)
+max_compound_interest = max_returns_per_week * \
+    (1 + (max_reward/num_of_compound))**(num_of_compound*time_conversion)
 
 min_compound_interest_USD = price * min_compound_interest
 max_compound_interest_USD = price * max_compound_interest
 symbol_upper = symbol.upper()
 coin_capitalize = coin.capitalize()
 
+min_reward_percent = "{:.2f}".format(min_reward*100) + "%"
+max_reward_percent = "{:.2f}".format(max_reward*100) + "%"
 
 print('Coin: ', coin_capitalize, "\n"
-     'Symbol: ' , symbol_upper, '\n'
-     'Price: $' , price , '\n'
-     'Staking: ', staking, '\n'
-     'Minimuim Reward: ', min_reward, '\n'
-     'Maximuim Reward: ', max_reward, '\n' 
-     "Minimuim Compound Staking Interest: ", min_compound_interest, symbol_upper, '\n'
-     "Maximuim Compound Staking Interest: ", max_compound_interest, symbol_upper, '\n'
-     "Min USD: ", "${:.2f}".format(min_compound_interest_USD), '\n'
-     "Max USD: ", "${:.2f}".format(max_compound_interest_USD))
+      'Symbol: ', symbol_upper, '\n'
+      'Price: $', price, '\n'
+      'Staking: ', staking, '\n'
+      'Minimuim Reward: ', min_reward_percent, '\n'
+      'Maximuim Reward: ', max_reward_percent, '\n'
+      "Minimuim Compound Staking Interest: ", min_compound_interest, symbol_upper, '\n'
+      "Maximuim Compound Staking Interest: ", max_compound_interest, symbol_upper, '\n'
+      "Min USD: ", "${:.2f}".format(min_compound_interest_USD), '\n'
+      "Max USD: ", "${:.2f}".format(max_compound_interest_USD))
