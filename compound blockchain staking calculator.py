@@ -109,20 +109,19 @@ max_reward = float(f'{max / 100}')
 print("Enter time period you would like to compound")
 time_period = input("Enter either Y M W: ")
 
-
-def convert_time_period(time_period):  # t in the equation
+#a = p*(1 + (r/n))**(n*t)
+def convert_time_period(time_period):  # t in the equation // amount of times in a period
     #time_amount = 0
     if time_period.upper() == 'Y':
         years = int(input("Enter amount of years: "))
-        time_period = 365 * years
-        print(type(years))
+        time_period = int(years)
     elif time_period.upper() == 'M':
         months = int(input("Enter amount of months: "))
-        time_period = 30 * months  # find for different months
+        time_period = int(months)  # find for different months
         print("30 Days")
     elif time_period.upper() == 'W':
         weeks = int(input("Enter amount of weeks: "))
-        time_period = 7 * weeks
+        time_period = int(weeks)
     else:
         print("Not a valid time period.")
         quit()
@@ -130,8 +129,8 @@ def convert_time_period(time_period):  # t in the equation
 
 
 time_conversion = int(convert_time_period(time_period))
-
-print("Enter number of times interest is compounded: ")
+#a = p*(1 + (r/n))**(n,t)
+print("Enter number of times interest is compounded: ") #find n
 num_times_interest_compounded_n = input(
     "Daily 'D' Weekly 'W' Monthly 'M' Yearly 'Y' or any number: ")  # Daily Weekly Monthly Yearly
 
@@ -152,7 +151,7 @@ def find_num_of_compound(num_times_interest_compounded_n):
         return 1 * time_conversion
 
 
-num_of_compound = find_num_of_compound(num_times_interest_compounded_n)
+num_of_compound = int(find_num_of_compound(num_times_interest_compounded_n))
 # def num_investments (n):
 
 
@@ -167,30 +166,35 @@ num_of_compound = find_num_of_compound(num_times_interest_compounded_n)
 # min_returns_per_week = (staking * (round_compound/min_reward)) #p = the principal investment amount (the initial deposit or loan amount) /12 months /4 weeks
 # max_returns_per_week = (staking * (round_compound/max_reward))
 # p = the principal investment amount (the initial deposit or loan amount) /12 months /4 weeks
-min_returns_per_week = (staking * min_reward/num_of_compound)
-max_returns_per_week = (staking * max_reward/num_of_compound)
+#min_returns_per_week = (staking * min_reward/num_of_compound)
+#max_returns_per_week = (staking * max_reward/num_of_compound)
 
 # 1 = 1 year need to figure out the time calculation// (n*t) n = amount of times done // t = time period
-min_compound_interest = min_returns_per_week * \
-    (1 + (min_reward/num_of_compound))**(num_of_compound*time_conversion)
-max_compound_interest = max_returns_per_week * \
-    (1 + (max_reward/num_of_compound))**(num_of_compound*time_conversion)
+min_compound_interest = staking * (1 + (min_reward/num_of_compound))**(num_of_compound*time_conversion)
+max_compound_interest = staking * (1 + (max_reward/num_of_compound))**(num_of_compound*time_conversion)
 
 min_compound_interest_USD = price * min_compound_interest
 max_compound_interest_USD = price * max_compound_interest
 symbol_upper = symbol.upper()
 coin_capitalize = coin.capitalize()
 
+staking_USD = price * staking
+min_USD_gains = staking + min_compound_interest
+max_USD_gains = staking + max_compound_interest
+
 min_reward_percent = "{:.2f}".format(min_reward*100) + "%"
 max_reward_percent = "{:.2f}".format(max_reward*100) + "%"
 
 print('Coin: ', coin_capitalize, "\n"
       'Symbol: ', symbol_upper, '\n'
-      'Price: $', price, '\n'
+      'Price: ', '${:.2f}'.format(price), '\n'
       'Staking: ', staking, '\n'
+      'Staking in USD: ', "${:.2f}".format(staking_USD), '\n'
       'Minimuim Reward: ', min_reward_percent, '\n'
       'Maximuim Reward: ', max_reward_percent, '\n'
       "Minimuim Compound Staking Interest: ", min_compound_interest, symbol_upper, '\n'
       "Maximuim Compound Staking Interest: ", max_compound_interest, symbol_upper, '\n'
-      "Min USD: ", "${:.2f}".format(min_compound_interest_USD), '\n'
-      "Max USD: ", "${:.2f}".format(max_compound_interest_USD))
+      "Min USD interest: ", "${:.2f}".format(min_compound_interest_USD), '\n'
+      "Max USD interest: ", "${:.2f}".format(max_compound_interest_USD), '\n'
+      "Min USD Gains: ", "${:.2f}".format(min_USD_gains), '\n' 
+      "Max USD Gains: ", "${:.2f}".format(max_USD_gains))
