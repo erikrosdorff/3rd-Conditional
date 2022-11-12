@@ -89,6 +89,7 @@ coin = input("Enter name of the coin: ")
 symbol = input("Enter coin Symbol: ")
 price_input = float(input("Enter current price of coin USD: "))
 price = float(price_input)
+
 staking = float(input("Enter how many coins are being staked: "))
 min_reward_input = float(input("Enter minimuim reward percentage, e.g. 12: "))
 # fstring converts to percentage
@@ -137,19 +138,20 @@ num_times_interest_compounded_n = input(
     "Daily 'D' Weekly 'W' Monthly 'M' Yearly 'Y' or any number: ")  # Daily Weekly Monthly Yearly
 
 
+
 # create flexibility in amount of time to compound (e.g. 2 times a week)
 def find_num_of_compound(num_times_interest_compounded_n):
     if num_times_interest_compounded_n.isnumeric():
         return float(num_times_interest_compounded_n)
 
     char = num_times_interest_compounded_n.upper()
-    if char == 'D' or 'DAILY':
+    if char == 'D' or char == 'DAILY':
         return 365 * time_conversion
-    elif char == 'W' or 'WEEKLY':
+    elif char == 'W' or char == 'WEEKLY':
         return 52 * time_conversion
-    elif char == 'M' or 'Monthly':
+    elif char == 'M' or char == 'Monthly':
         return 12 * time_conversion
-    elif char == 'Y' or 'Yearly':
+    elif char == 'Y' or char == 'Yearly':
         return 1 * time_conversion
 
 
@@ -186,7 +188,7 @@ symbol_upper = symbol.upper()
 coin_capitalize = coin.capitalize()
 
 staking_USD = price * staking
-min_USD_gains = staking + min_compound_interest
+min_USD_gains = min_compound_interest_USD + staking_USD
 try:
     max_USD_gains = staking + max_compound_interest
 except:
@@ -197,6 +199,7 @@ try:
 except:
     pass
 try:
+    #min_compound_interest = staking * (1 + (min_reward/num_of_compound))**(num_of_compound*time_conversion)
     print('Coin: ', coin_capitalize, "\n"
       'Symbol: ', symbol_upper, '\n'
       'Price: ', '${:.2f}'.format(price), '\n'
